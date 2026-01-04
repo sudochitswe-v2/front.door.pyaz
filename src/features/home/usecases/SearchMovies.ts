@@ -10,8 +10,8 @@ interface SearchParams {
   offset?: number;
 }
 
-class MovieService {
-  async searchMovies(params: SearchParams = {}): Promise<ResponseModel<Movie>> {
+class SearchMovies {
+  async query(params: SearchParams = {}): Promise<ResponseModel<Movie>> {
     const { query = '', limit = 12, offset = 0 } = params;
 
     const payload = {
@@ -39,22 +39,6 @@ class MovieService {
     const data = await response.json();
     return data;
   }
-
-  async getMovieById(id: number): Promise<Movie> {
-    const response = await fetch(`${API_BASE_URL}/movies/${id}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_KEY}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return await response.json();
-  }
 }
 
-export const movieService = new MovieService();
+export const searchMovies = new SearchMovies();

@@ -1,21 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { movieService } from '../services/movieService';
+import { searchMovies } from '../usecases/SearchMovies';
 import { MovieCard } from '../components/MovieCard';
 import { Pagination } from '../../../components/Pagination';
+import Search from '../../../components/Search';
 import type { Movie } from '../models/IMovie';
 
 const Home: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>('');
   const [searchParams, setSearchParams] = useSearchParams();
   const [totalResults, setTotalResults] = useState<number>(0);
 
   // Get page from URL params, default to 1
   const currentPage = parseInt(searchParams.get('page') || '1');
   const itemsPerPage = 20; // 2 rows x 6 columns = 12 items per page
+
+  // Get initial search query from URL params
+  const initialSearchQuery = searchParams.get('query') || '';
+
+  const [searchQuery, setSearchQuery] = useState<string>(initialSearchQuery);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -25,7 +30,7 @@ const Home: React.FC = () => {
 
         const offset = (currentPage - 1) * itemsPerPage;
 
-        const response = await movieService.searchMovies({
+        const response = await searchMovies.query({
           query: searchQuery,
           limit: itemsPerPage,
           offset: offset
@@ -44,10 +49,12 @@ const Home: React.FC = () => {
     fetchMovies();
   }, [searchQuery, currentPage]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Update URL with search query and reset to page 1
-    setSearchParams({ query: searchQuery, page: '1' });
+  const handleSearch = (newSearchQuery: string) => {
+    setSearchQuery(newSearchQuery);
+    // Update URL with search query and reset to page 1 when search changes
+    if (newSearchQuery !== searchParams.get('query')) {
+      setSearchParams({ query: newSearchQuery, page: '1' });
+    }
   };
 
   const handlePageChange = (newPage: number) => {
@@ -60,26 +67,14 @@ const Home: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 py-2">
       <div className="w-full px-2">
-        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Movie Library</h1>
+        {/* <h1 className="text-3xl font-bold text-center text-gray-800 mb-8"></h1> */}
 
-        {/* Search Form */}
-        <form onSubmit={handleSearch} className="mb-8">
-          <div className="flex gap-2 max-w-6xl mx-auto">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search movies..."
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              type="submit"
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Search
-            </button>
-          </div>
-        </form>
+        {/* Search Component */}
+        <Search
+          onSearch={handleSearch}
+          initialValue={initialSearchQuery}
+          placeholder="Search movies..."
+        />
 
         {/* Loading State */}
         {loading && (

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import Player from '../components/Player';
 import type { IMovieDetail } from '../models/IMovieDetail';
 import { getMovieDetails } from '../usecases/GetMovieDetails';
+import { formatReleaseDate, formatRuntime } from '../utils/CommonFormat';
 
 const VideoPlayer: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -57,13 +58,14 @@ const VideoPlayer: React.FC = () => {
 
   // Construct video URL from env base URL + movie detail parent/name
   const videoUrl = `${import.meta.env.VITE_VIDEO_BASE_URL}/d/${movie.parent}/${movie.name}`;
+  const posterUrl = `${import.meta.env.VITE_TMDB_URL}${movie.poster_path}`;
 
   // ArtPlayer options
   const artPlayerOptions = {
     container: 'artplayer-app',
     url: videoUrl,
     title: movie.title,
-    poster: movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : undefined,
+    poster: posterUrl,
     volume: 0.5,
     muted: false,
     autoplay: false,
@@ -129,12 +131,12 @@ const VideoPlayer: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div className="bg-gray-800 p-4 rounded-lg">
                   <h3 className="text-lg font-semibold text-blue-400 mb-2">Release Date</h3>
-                  <p className="text-xl">{movie.release_date}</p>
+                  <p className="text-xl">{formatReleaseDate(movie.release_date)}</p>
                 </div>
 
                 <div className="bg-gray-800 p-4 rounded-lg">
                   <h3 className="text-lg font-semibold text-blue-400 mb-2">Runtime</h3>
-                  <p className="text-xl">{movie.runtime} minutes</p>
+                  <p className="text-xl">{formatRuntime(movie.runtime)} </p>
                 </div>
 
                 <div className="bg-gray-800 p-4 rounded-lg">

@@ -1,4 +1,6 @@
+import React from 'react';
 import type { Movie } from '../models/IMovie';
+import { formatRuntime } from '../utils/CommonFormat';
 import { useNavigate } from 'react-router-dom';
 
 // Movie Card Component
@@ -7,31 +9,36 @@ interface MovieCardProps {
 }
 
 export const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
-    
+
     const navigate = useNavigate();
 
-    const posterUrl = movie.poster_path
-        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-        : '/placeholder-movie-poster.jpg'; // Fallback image
 
-    // Format runtime to hours and minutes
-    const formatRuntime = (minutes: number) => {
-        if (!minutes) return 'N/A';
-        const hours = Math.floor(minutes / 60);
-        const mins = minutes % 60;
-        return `${hours}h ${mins}m`;
-    };
 
     const onCardClick = () => navigate(`/play/${movie.id}`);
 
+    // State to track if image has failed to load
+    const [imageError, setImageError] = React.useState(false);
+    const poster_url = movie.poster_path
+        ? `${import.meta.env.VITE_TMDB_URL}${movie.poster_path}`
+        : '/placeholder-movie-poster.jpg';
     return (
         <div className="bg-gray-800 rounded-lg shadow-md border border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full group" onClick={onCardClick}>
             <div className="relative aspect-[2/3] w-full overflow-hidden"> {/* Aspect ratio 2:3 for movie posters */}
-                <img
-                    src={posterUrl}
-                    alt={movie.title}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                />
+                {!imageError ? (
+                    <img
+                        src={poster_url} // Fallback image
+                        alt={movie.title}
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        onError={() => setImageError(true)}
+                        onLoad={() => setImageError(false)}
+                    />
+                ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-gray-700">
+                        <div className="text-center p-4">
+                            <div className="text-gray-400 text-md font-medium">image unavliable</div>
+                        </div>
+                    </div>
+                )}
             </div>
             <div className="p-4 flex-grow flex flex-col">
                 <h3 className="font-bold text-lg text-white line-clamp-1 mb-1">{movie.title}</h3>

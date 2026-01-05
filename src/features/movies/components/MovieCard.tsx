@@ -1,4 +1,5 @@
 import type { Movie } from '../models/IMovie';
+import { useNavigate } from 'react-router-dom';
 
 // Movie Card Component
 interface MovieCardProps {
@@ -6,6 +7,9 @@ interface MovieCardProps {
 }
 
 export const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
+    
+    const navigate = useNavigate();
+
     const posterUrl = movie.poster_path
         ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
         : '/placeholder-movie-poster.jpg'; // Fallback image
@@ -18,8 +22,10 @@ export const MovieCard: React.FC<MovieCardProps> = ({ movie }) => {
         return `${hours}h ${mins}m`;
     };
 
+    const onCardClick = () => navigate(`/play/${movie.id}`);
+
     return (
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full group">
+        <div className="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col h-full group" onClick={onCardClick}>
             <div className="relative aspect-[2/3] w-full overflow-hidden"> {/* Aspect ratio 2:3 for movie posters */}
                 <img
                     src={posterUrl}

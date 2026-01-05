@@ -1,4 +1,4 @@
-* Player Page
+* ~~Player Page~~
 * Genre Filtering
 * Dark Mode
-* Authentication
+* Authentications

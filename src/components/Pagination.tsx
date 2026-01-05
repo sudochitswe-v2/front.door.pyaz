@@ -49,14 +49,14 @@ export const Pagination: React.FC<PaginationProps> = ({
     const pageNumbers = getPageNumbers();
 
     return (
-        <nav className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 bg-white p-2 rounded-lg shadow-sm border border-gray-200 w-full max-w-4xl">
+        <nav className="flex flex-wrap items-center justify-center gap-1 sm:gap-2 bg-gray-800 p-2 rounded-lg shadow-sm border border-gray-700 w-full max-w-4xl">
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
                 className={`flex items-center justify-center px-3 py-2 rounded-md transition-colors duration-200 text-sm
                 ${currentPage === 1
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-white text-gray-700 hover:bg-gray-200 border border-gray-300'
+                        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                        : 'bg-gray-700 text-gray-200 hover:bg-gray-600 border border-gray-600'
                     }`}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -68,7 +68,7 @@ export const Pagination: React.FC<PaginationProps> = ({
 
             {pageNumbers.map((pageNum, index) => (
                 pageNum === -1 ? (
-                    <span key={`ellipsis-${index}`} className="px-2 py-2 text-gray-500 text-sm">...</span>
+                    <span key={`ellipsis-${index}`} className="px-2 py-2 text-gray-400 text-sm">...</span>
                 ) : (
                     <button
                         key={pageNum}
@@ -76,7 +76,7 @@ export const Pagination: React.FC<PaginationProps> = ({
                         className={`flex items-center justify-center min-w-[32px] sm:min-w-[40px] h-8 sm:h-10 rounded-md transition-colors duration-200 text-sm
                         ${currentPage === pageNum
                             ? 'bg-blue-600 text-white shadow-md'
-                            : 'bg-white text-gray-700 hover:bg-gray-200 border border-gray-300'
+                            : 'bg-gray-700 text-gray-200 hover:bg-gray-600 border border-gray-600'
                         }`}
                     >
                         {pageNum}
@@ -89,8 +89,8 @@ export const Pagination: React.FC<PaginationProps> = ({
                 disabled={currentPage === totalPages}
                 className={`flex items-center justify-center px-3 py-2 rounded-md transition-colors duration-200 text-sm
                 ${currentPage === totalPages
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-white text-gray-700 hover:bg-gray-200 border border-gray-300'
+                        ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                        : 'bg-gray-700 text-gray-200 hover:bg-gray-600 border border-gray-600'
                     }`}
             >
                 <span className="hidden sm:block">Next</span>

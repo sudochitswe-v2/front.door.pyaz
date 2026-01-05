@@ -5,6 +5,7 @@ import { MovieCard } from '../components/MovieCard';
 import { Pagination } from '../../../components/Pagination';
 import Search from '../../../components/Search';
 import type { Movie } from '../models/IMovie';
+import KpLogo from '../components/KpLogo';
 
 const Home: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -65,8 +66,11 @@ const Home: React.FC = () => {
   const totalPages = Math.ceil(totalResults / itemsPerPage);
 
   return (
-    <div className="min-h-screen bg-gray-100 py-2">
+    <div className="min-h-screen bg-gray-900 py-2">
       <div className="w-full px-2">
+        <div className="flex justify-center">
+          <KpLogo />
+        </div>
         {/* <h1 className="text-3xl font-bold text-center text-gray-800 mb-8"></h1> */}
 
         {/* Search Component */}
@@ -79,13 +83,13 @@ const Home: React.FC = () => {
         {/* Loading State */}
         {loading && (
           <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-400"></div>
           </div>
         )}
 
         {/* Error State */}
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
+          <div className="bg-red-800 border border-red-600 text-red-100 px-4 py-3 rounded relative mb-4">
             <strong>Error: </strong> {error}
           </div>
         )}
@@ -93,9 +97,7 @@ const Home: React.FC = () => {
         {/* Movie Grid */}
         {!loading && !error && (
           <>
-            <div className="mb-4 text-gray-600">
-              Showing {movies.length} of {totalResults} movies
-            </div>
+            
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 sm:gap-2">
               {movies.map((movie) => (
                 <MovieCard key={movie.id} movie={movie} />

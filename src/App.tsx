@@ -1,9 +1,15 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import DisableDevtool from 'disable-devtool';
+
 import Home from './features/movies/pages/Home';
 import VideoPlayer from './features/movies/pages/VideoPlayer';
 
+
 function App() {
+  if (import.meta.env.PROD) {
+    DisableDevtool();
+  }
   return (
     <Router>
       <div className="App">

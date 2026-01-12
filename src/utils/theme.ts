@@ -56,7 +56,8 @@ export const initializeTheme = (): void => {
     }
     
     // Listen for changes in system preference
-    mediaQuery.addEventListener('change', (e) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    mediaQuery.addEventListener('change', (_e) => {
       // Maintain app's theme regardless of system preference
       updateThemeColor('#7B2CBF');
     });

@@ -1,4 +1,17 @@
 /* @tailwind base;
 @tailwind components;
 @tailwind utilities; */
+
 @import "tailwindcss";
+
+:root {
+  --primary-color: #7B2CBF;
+  --secondary-color: #9D4EDD;
+  --accent-color: #3b82f6;
+  --theme-color: var(--primary-color);
+}
+
+/* Apply theme color to body for consistent theming */
+body {
+  background-color: #1a1a1a; /* Dark background to complement the purple theme */
+}

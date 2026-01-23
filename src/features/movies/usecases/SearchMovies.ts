@@ -8,17 +8,23 @@ interface SearchParams {
   query?: string;
   limit?: number;
   offset?: number;
+  genre?: string;
 }
 
 class SearchMovies {
   async query(params: SearchParams = {}): Promise<ResponseModel<Movie>> {
-    const { query = '', limit = 12, offset = 0 } = params;
+    const { query = '', limit = 12, offset = 0, genre = '' } = params;
+
+    let filter = "is_dir = false";
+    if (genre) {
+      filter = `is_dir = false AND genres = '${genre}'`;
+    }
 
     const payload = {
       q: query,
       limit: limit,
       offset: offset,
-      filter: "is_dir = false",
+      filter: filter,
       attributesToRetrieve: ["*"],
       attributesToHighlight: ["*"]
     };

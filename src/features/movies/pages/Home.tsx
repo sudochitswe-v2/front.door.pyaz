@@ -6,6 +6,7 @@ import { Pagination } from '../../../components/Pagination';
 import Search from '../../../components/Search';
 import type { Movie } from '../models/IMovie';
 import KpLogo from '../components/KpLogo';
+import { AVAILABLE_GENRES } from '../../../utils/genres';
 
 const Home: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -20,8 +21,10 @@ const Home: React.FC = () => {
 
   // Get initial search query from URL params
   const initialSearchQuery = searchParams.get('query') || '';
+  const initialGenre = searchParams.get('genre') || '';
 
   const [searchQuery, setSearchQuery] = useState<string>(initialSearchQuery);
+  const [selectedGenre, setSelectedGenre] = useState<string>(initialGenre);
 
   useEffect(() => {
     const fetchMovies = async () => {
@@ -34,7 +37,8 @@ const Home: React.FC = () => {
         const response = await searchMovies.query({
           query: searchQuery,
           limit: itemsPerPage,
-          offset: offset
+          offset: offset,
+          genre: selectedGenre
         });
 
         setMovies(response.hits);
@@ -48,13 +52,21 @@ const Home: React.FC = () => {
     };
 
     fetchMovies();
-  }, [searchQuery, currentPage]);
+  }, [searchQuery, currentPage, selectedGenre]);
 
   const handleSearch = (newSearchQuery: string) => {
     setSearchQuery(newSearchQuery);
     // Update URL with search query and reset to page 1 when search changes
     if (newSearchQuery !== searchParams.get('query')) {
-      setSearchParams({ query: newSearchQuery, page: '1' });
+      setSearchParams({ query: newSearchQuery, genre: selectedGenre, page: '1' });
+    }
+  };
+
+  const handleGenreChange = (genre: string) => {
+    setSelectedGenre(genre);
+    // Update URL with genre and reset to page 1 when genre changes
+    if (genre !== searchParams.get('genre')) {
+      setSearchParams({ query: searchQuery, genre: genre, page: '1' });
     }
   };
 
@@ -73,12 +85,33 @@ const Home: React.FC = () => {
         </div>
         {/* <h1 className="text-3xl font-bold text-center text-gray-800 mb-8"></h1> */}
 
-        {/* Search Component */}
-        <Search
-          onSearch={handleSearch}
-          initialValue={initialSearchQuery}
-          placeholder="Search movies..."
-        />
+        <div className="flex flex-col sm:flex-row gap-2 mb-4">
+          {/* Search Component */}
+          <div className="flex-grow">
+            <Search
+              onSearch={handleSearch}
+              initialValue={initialSearchQuery}
+              placeholder="Search movies..."
+            />
+          </div>
+
+          {/* Genre Filter Dropdown */}
+          <div className="sm:w-48">
+            <select
+              id="genre-filter"
+              value={selectedGenre}
+              onChange={(e) => handleGenreChange(e.target.value)}
+              className="w-full p-1 bg-gray-800 text-white border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">All Genres</option>
+              {AVAILABLE_GENRES.map((genre) => (
+                <option key={genre} value={genre}>
+                  {genre}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
 
         {/* Loading State */}
         {loading && (
@@ -97,7 +130,7 @@ const Home: React.FC = () => {
         {/* Movie Grid */}
         {!loading && !error && (
           <>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 sm:gap-2">
               {movies.map((movie) => (
                 <MovieCard key={movie.id} movie={movie} />

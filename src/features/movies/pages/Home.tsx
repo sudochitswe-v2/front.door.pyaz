@@ -85,7 +85,7 @@ const Home: React.FC = () => {
         </div>
         {/* <h1 className="text-3xl font-bold text-center text-gray-800 mb-8"></h1> */}
 
-        <div className="flex flex-col sm:flex-row gap-2 mb-4">
+        <div className="max-w-4xl mx-auto w-full flex flex-col sm:flex-row gap-3 items-stretch mb-8 px-2">
           {/* Search Component */}
           <div className="flex-grow">
             <Search
@@ -96,12 +96,17 @@ const Home: React.FC = () => {
           </div>
 
           {/* Genre Filter Dropdown */}
-          <div className="sm:w-48">
+          <div className="sm:w-56 relative group">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              </svg>
+            </div>
             <select
               id="genre-filter"
               value={selectedGenre}
               onChange={(e) => handleGenreChange(e.target.value)}
-              className="w-full p-1 bg-gray-800 text-white border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-11 pr-10 py-3 bg-gray-800/80 text-white border border-gray-700/50 rounded-2xl appearance-none focus:outline-none focus:ring-2 focus:ring-blue-600/50 focus:border-blue-500 backdrop-blur-md transition-all duration-300 font-medium cursor-pointer"
             >
               <option value="">All Genres</option>
               {AVAILABLE_GENRES.map((genre) => (
@@ -110,6 +115,11 @@ const Home: React.FC = () => {
                 </option>
               ))}
             </select>
+            <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-500 transition-transform group-hover:translate-y-0.5">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
           </div>
         </div>
 
@@ -131,7 +141,7 @@ const Home: React.FC = () => {
         {!loading && !error && (
           <>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 sm:gap-2">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
               {movies.map((movie) => (
                 <MovieCard key={movie.id} movie={movie} />
               ))}

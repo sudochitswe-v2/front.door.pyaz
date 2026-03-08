@@ -22,21 +22,16 @@ const Player: React.FC<PlayerProps> = ({ option, style, className }) => {
                 styleElement = document.createElement('style');
                 styleElement.id = styleId;
                 styleElement.textContent = `
-                    .artplayer, .artplayer *, .artplayer-container {
+                    .artplayer, .artplayer-container, .artplayer-video {
                         width: 100% !important;
                         height: 100% !important;
                     }
                     .artplayer {
                         --art-theme: #3b82f6 !important;
+                        background-color: #000 !important;
                     }
                     .artplayer .artplayer-video {
-                        width: 100% !important;
-                        height: 100% !important;
                         object-fit: contain;
-                    }
-                    .artplayer-container {
-                        width: 100% !important;
-                        height: 100% !important;
                     }
                 `;
                 document.head.appendChild(styleElement);

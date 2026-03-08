@@ -77,7 +77,7 @@ const VideoPlayer: React.FC = () => {
     flip: true,
     aspectRatio: true,
     playsInline: true,
-    autoSize: true,
+    autoSize: false,
     autoMini: false,
     mutex: true,
     backdrop: true,
@@ -88,10 +88,10 @@ const VideoPlayer: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white">
       {/* Back Button */}
-      <div className="absolute top-4 left-4 z-9999">
+      <div className="fixed top-4 left-4 z-50">
         <button
           onClick={() => window.history.back()}
-          className="flex items-center px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition duration-300"
+          className="flex items-center px-4 py-2 bg-gray-800/80 hover:bg-gray-700 backdrop-blur-sm text-white rounded-lg transition duration-300 shadow-lg border border-gray-700"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
             <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
@@ -101,62 +101,55 @@ const VideoPlayer: React.FC = () => {
       </div>
 
       {/* Video Player Section */}
-      <div className="w-full">
-        <Player
-          option={artPlayerOptions}
-          style={{ width: '100%', height: '70vh' }}
-          className="w-full h-[70vh] max-h-[70vh] bg-black"
-        />
+      <div className="w-full bg-black shadow-2xl">
+        <div className="max-w-[1600px] mx-auto">
+          <Player
+            option={artPlayerOptions}
+            className="w-full aspect-video md:max-h-[85vh] bg-black mx-auto"
+          />
+        </div>
       </div>
 
       {/* Movie Details Section */}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-8">
-            {/* Movie Poster */}
-            {/* <div className="md:w-1/3 flex justify-center">
-              {movie.poster_path && (
-                <img
-                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                  alt={movie.title}
-                  className="w-full max-w-xs rounded-lg shadow-2xl object-cover"
-                />
-              )}
-            </div> */}
-
+          <div className="flex flex-col gap-8">
             {/* Movie Information */}
-            <div className="md:w-2/3">
-              <h1 className="text-4xl font-bold mb-4 text-white">{movie.title}</h1>
+            <div className="w-full">
+              <h1 className="text-3xl md:text-4xl font-bold mb-4 text-white leading-tight">{movie.title}</h1>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div className="bg-gray-800 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold text-blue-400 mb-2">Release Date</h3>
-                  <p className="text-xl">{formatReleaseDate(movie.release_date)}</p>
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-8">
+                <div className="bg-gray-800/50 p-3 md:p-4 rounded-xl border border-gray-700/50">
+                  <h3 className="text-xs md:text-sm font-semibold text-blue-400 uppercase tracking-wider mb-1">Release</h3>
+                  <p className="text-lg md:text-xl font-medium">{formatReleaseDate(movie.release_date)}</p>
                 </div>
 
-                <div className="bg-gray-800 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold text-blue-400 mb-2">Runtime</h3>
-                  <p className="text-xl">{formatRuntime(movie.runtime)} </p>
+                <div className="bg-gray-800/50 p-3 md:p-4 rounded-xl border border-gray-700/50">
+                  <h3 className="text-xs md:text-sm font-semibold text-blue-400 uppercase tracking-wider mb-1">Runtime</h3>
+                  <p className="text-lg md:text-xl font-medium">{formatRuntime(movie.runtime)} </p>
                 </div>
 
-                <div className="bg-gray-800 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold text-blue-400 mb-2">Rating</h3>
-                  <p className="text-xl">{movie.vote_average}/10</p>
+                <div className="bg-gray-800/50 p-3 md:p-4 rounded-xl border border-gray-700/50">
+                  <h3 className="text-xs md:text-sm font-semibold text-blue-400 uppercase tracking-wider mb-1">Rating</h3>
+                  <div className="flex items-center gap-1">
+                    <span className="text-lg md:text-xl font-medium">{movie.vote_average.toFixed(1)}</span>
+                    <span className="text-gray-500 text-sm">/10</span>
+                  </div>
                 </div>
 
-                <div className="bg-gray-800 p-4 rounded-lg">
-                  <h3 className="text-lg font-semibold text-blue-400 mb-2">Popularity</h3>
-                  <p className="text-xl">{movie.popularity.toFixed(2)}</p>
+                <div className="bg-gray-800/50 p-3 md:p-4 rounded-xl border border-gray-700/50">
+                  <h3 className="text-xs md:text-sm font-semibold text-blue-400 uppercase tracking-wider mb-1">Popularity</h3>
+                  <p className="text-lg md:text-xl font-medium">{movie.popularity.toFixed(0)}</p>
                 </div>
               </div>
 
-              <div className="mb-6">
-                <h3 className="text-xl font-semibold text-blue-400 mb-3">Genres</h3>
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-gray-400 mb-3 border-l-4 border-blue-600 pl-3">Genres</h3>
                 <div className="flex flex-wrap gap-2">
                   {movie.genres.map((genre, index) => (
                     <span
                       key={index}
-                      className="px-3 py-1 bg-blue-600 text-white rounded-full text-sm"
+                      className="px-4 py-1.5 bg-blue-600/20 text-blue-400 border border-blue-600/30 rounded-full text-sm font-medium transition-colors hover:bg-blue-600/30"
                     >
                       {genre}
                     </span>
@@ -164,20 +157,30 @@ const VideoPlayer: React.FC = () => {
                 </div>
               </div>
 
-              <div className="mb-6">
-                <h3 className="text-xl font-semibold text-blue-400 mb-3">Overview</h3>
-                <p className="text-gray-300 leading-relaxed">{movie.overview}</p>
+              <div className="mb-8">
+                <h3 className="text-lg font-semibold text-gray-400 mb-3 border-l-4 border-blue-600 pl-3">Overview</h3>
+                <p className="text-gray-300 leading-relaxed text-base md:text-lg">{movie.overview}</p>
               </div>
 
-              <div className="bg-gray-800 p-4 rounded-lg">
-                <h3 className="text-lg font-semibold text-blue-400 mb-2">Additional Info</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                  <p><span className="text-gray-400">ID:</span> {movie.id}</p>
-                  <p><span className="text-gray-400">Name:</span> {movie.name}</p>
-                  <p><span className="text-gray-400">Parent:</span> {movie.parent}</p>
-                  <p><span className="text-gray-400">Is Directory:</span> {movie.is_dir ? 'Yes' : 'No'}</p>
-                  <p><span className="text-gray-400">Size:</span> {movie.size} bytes</p>
-                  <p><span className="text-gray-400">Keywords:</span> {movie.keywords?.join(', ') || 'N/A'}</p>
+              <div className="bg-gray-800/30 p-5 rounded-2xl border border-gray-700/30">
+                <h3 className="text-lg font-semibold text-gray-400 mb-4">Metadata</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-8 text-sm md:text-base">
+                  <div className="flex justify-between border-b border-gray-700/50 pb-1">
+                    <span className="text-gray-500">TMDB ID</span>
+                    <span className="text-gray-300">{movie.id}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-gray-700/50 pb-1">
+                    <span className="text-gray-500">File Name</span>
+                    <span className="text-gray-300 truncate ml-4" title={movie.name}>{movie.name}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-gray-700/50 pb-1">
+                    <span className="text-gray-500">Category</span>
+                    <span className="text-gray-300">{movie.parent}</span>
+                  </div>
+                  <div className="flex justify-between border-b border-gray-700/50 pb-1">
+                    <span className="text-gray-500">Size</span>
+                    <span className="text-gray-300">{(movie.size / (1024 * 1024 * 1024)).toFixed(2)} GB</span>
+                  </div>
                 </div>
               </div>
             </div>

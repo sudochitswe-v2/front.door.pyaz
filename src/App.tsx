@@ -1,8 +1,8 @@
 import './App.css';
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import DisableDevtool from 'disable-devtool';
 import { initializeTheme } from './utils/theme';
+import { initializeDevToolsBlocker } from './utils/disableDevTools';
 
 import Home from './features/movies/pages/Home';
 import VideoPlayer from './features/movies/pages/VideoPlayer';
@@ -12,11 +12,15 @@ function App() {
   useEffect(() => {
     // Initialize theme when app mounts
     initializeTheme();
-  }, []);
 
-  if (import.meta.env.PROD) {
-    DisableDevtool();
-  }
+    // Prevent dev tools in production build
+    if (import.meta.env.PROD) {
+      const cleanup = initializeDevToolsBlocker();
+      return () => {
+        cleanup();
+      };
+    }
+  }, []);
   return (
     <Router>
       <div className="App">
